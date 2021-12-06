@@ -12,7 +12,8 @@ window.addEventListener('load', () => {
         // Index nodes
         const nameNode = document.querySelector('.user-info p');
         const taskForm = document.querySelector('form');
-        const pendingTaskDiv = document.querySelector('#skeleton');
+        const pendingTaskList = document.querySelector('.tareas-pendientes');
+        const completedTaskList = document.querySelector('.tareas-terminadas');
         const newTaskInput = document.querySelector('#nuevaTarea');
         const taskDescription = document.querySelector('.tareas-pendientes .tarea .nombre');
         const taskTimestamp = document.querySelector('.tareas-pendientes .tarea .timestamp');
@@ -22,6 +23,7 @@ window.addEventListener('load', () => {
         /* -------------------------------------------------------------------------- */
         taskForm.addEventListener('submit', preventDefaultBehavior);
         taskForm.addEventListener('submit', addNewTask);
+        taskForm.addEventListener('submit', renderUserTasks);
 
         /* -------------------------------------------------------------------------- */
         /*                                  FUNCIONES                                 */
@@ -99,21 +101,30 @@ window.addEventListener('load', () => {
         async function renderUserTasks() {
             try {
                 const userTasks = await getUserTasks();
-                // console.log(userTasks);
-                pendingTaskDiv.innerHTML = userTasks.map( task =>
+                const completedTasks = userTasks.filter((task) => task.completed);
+                const pendingTasks = userTasks.filter((task) => !task.completed);
+                pendingTaskList.innerHTML = pendingTasks.map( task =>
                     `<li class="tarea">
-                    <div class="not-done"></div>
-                    <div class="descripcion">
-                      <p class="nombre">${task.description}</p>
-                      <p class="timestamp">Creada: ${task.createdAt.slice(0,10)}</p>
-                    </div>
-                  </li>`
-                  ).join('');
-
-                userTasks.forEach(task => {
-                    taskDescription.innerHTML = task.description;
-                    taskTimestamp.innerHTML = task.createdAt;
-                });
+                        <div class="not-done change" id="${task.id}"></div>
+                        <div class="descripcion">
+                            <p class="nombre">${task.description}</p>
+                            <p class="timestamp"><i class="far fa-calendar-alt"></i> Creada: ${task.createdAt.slice(0,10)}</p>
+                        </div>
+                    </li>`
+                    ).join('');
+                completedTaskList.innerHTML = completedTasks.map( task =>
+                    `<li class="tarea">
+                        <div class="done"></div>
+                        <div class="descripcion">
+                            <p class="nombre">${task.description}</p>
+                            <p class="timestamp">Creada: ${task.createdAt.slice(0,10)}</p>
+                            <div>
+                                <button><i id="${tarea.id}" class="fas fa-undo-alt change"></i></button>
+                                <button><i id="${tarea.id}" class="far fa-trash-alt"></i></button>
+                            </div>
+                        </div>
+                    </li>`
+                    ).join('');
             } catch (err) {
                 console.log(err);
             }
