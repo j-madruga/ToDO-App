@@ -15,8 +15,9 @@ window.addEventListener('load', () => {
         const pendingTaskList = document.querySelector('.tareas-pendientes');
         const completedTaskList = document.querySelector('.tareas-terminadas');
         const newTaskInput = document.querySelector('#nuevaTarea');
-        const taskDescription = document.querySelector('.tareas-pendientes .tarea .nombre');
-        const taskTimestamp = document.querySelector('.tareas-pendientes .tarea .timestamp');
+        const btnLogout = document.querySelector('#closeApp');
+        const btnTaskDone = document.getElementsByClassName('change');
+        console.log(btnTaskDone);
 
         /* -------------------------------------------------------------------------- */
         /*                                  LISTENERS                                 */
@@ -24,7 +25,8 @@ window.addEventListener('load', () => {
         taskForm.addEventListener('submit', preventDefaultBehavior);
         taskForm.addEventListener('submit', addNewTask);
         taskForm.addEventListener('submit', renderUserTasks);
-
+        btnLogout.addEventListener('click', logout);
+        
         /* -------------------------------------------------------------------------- */
         /*                                  FUNCIONES                                 */
         /* -------------------------------------------------------------------------- */
@@ -33,7 +35,7 @@ window.addEventListener('load', () => {
             event.preventDefault();
         }
 
-        // funcion que obtiene la información del usuario y devuelve una promesa
+        // Funcion que obtiene la información del usuario y devuelve una promesa
         function getUserData() {
             const userDataEndpoint = `${API_URL}/users/getMe`;
             const requestSettings = {
@@ -61,7 +63,7 @@ window.addEventListener('load', () => {
         }
         renderUserName();
 
-        // Funcion que agrega una nueva tarea y actualiza la lista
+        // Funcion que agrega una nueva tarea
         function addNewTask() {
             const newTaskEndpoint = `${API_URL}/tasks`;
             const requestSettings = {
@@ -74,10 +76,7 @@ window.addEventListener('load', () => {
             }
             fetch(newTaskEndpoint, requestSettings)
             .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                // renderUserTasks();
-            })
+            .then(data => console.log(data)) // aca podemos agregar una alerta de exito
         }
 
         // Funcion que trae las tareas
@@ -93,7 +92,7 @@ window.addEventListener('load', () => {
             return new Promise((resolve, reject) => {
                 fetch(getTasksEndpoint, requestSettings)
                 .then(response => resolve(response.json()))
-                .then((err) => reject('error obteniendo las tareas'))
+                .catch((err) => reject('error obteniendo las tareas'))
             })
         }
 
@@ -130,4 +129,21 @@ window.addEventListener('load', () => {
             }
         }
         renderUserTasks();
+
+        // Funcion que hace el logout y borra el JWT del localStorage
+        function logout() {
+            const confirmation = confirm('¿Seguro desea cerrar sesión?');
+            if(confirmation) {
+                localStorage.clear();
+                location.replace('./index.html');
+            }
+        }
+
+        // Funcion que cambia la tarea de estado
+        function changeTaskState() {
+            console.log(btn);
+            // const taskId = ;
+            const updateTaskEndpoint = `${API_URL}/task/${taskId}`;
+            console.log(updateTaskEndpoint);
+        }
 })
