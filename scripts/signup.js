@@ -70,9 +70,9 @@ window.addEventListener('load', () => {
     function normalizeObject() {
         objetoNormalizado = {
             firstName: signUpName.value.toLowerCase().trim(),
-            singUpLastName: singUpLastName.value.toLowerCase().trim(),
-            signUpEmail: signUpEmail.value.toLowerCase().trim(),
-            signUpPassword: signUpPassword.value.trim()
+            lastName: singUpLastName.value.toLowerCase().trim(),
+            email: signUpEmail.value.toLowerCase().trim(),
+            password: signUpPassword.value.trim()
         }
         console.log(objetoNormalizado);
         return objetoNormalizado;
@@ -80,26 +80,29 @@ window.addEventListener('load', () => {
 
     // ***** Funcion que crea nuevo usuario
     function createNewUser() {
+        setTimeout(spinner.showSpinner(), 1000);
         const newUserUrl = `${API_URL}/users`;
         const requestSettings = {
             method: 'POST',
             headers: {
-                'Content-type': 'application/json'
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify(normalizeObject())
         };
         console.log(requestSettings);
         fetch(newUserUrl, requestSettings)
-            .then(response => {
-                console.log(response);
+            .then((response) => {
                 return response.json();
             })
-            .then(data => {
-                console.log(data);
+            .then((data) => {
                 if (data.jwt) {
                     localStorage.setItem('jwt', data.jwt);
                     location.href = './mis-tareas.html';
+                } else {
+                    console.log('algo salio mal');
+                    spinner.removeSpinner();
                 }
             })
+            .catch((err) => console.log(err))
     }
 })
