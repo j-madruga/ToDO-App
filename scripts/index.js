@@ -9,7 +9,6 @@ window.addEventListener('load', () => {
     /* -------------------------------------------------------------------------- */
     /*                                  LISTENERS                                 */
     /* -------------------------------------------------------------------------- */
-
     indexForm.addEventListener('submit', login);
     indexForm.addEventListener('submit', preventDefaultBehavior);
 
@@ -23,6 +22,7 @@ window.addEventListener('load', () => {
     
     // ***** Funcion que ejecuta el login y guarda el JWT en localStorage
     function login() {
+        setTimeout(spinner.showSpinner(), 1000);
         const loginEndPoint = `${API_URL}/users/login`;
         const requestSettings = {
             method: 'POST',
@@ -31,16 +31,19 @@ window.addEventListener('load', () => {
             },
             body:`{"email" : "${indexEmail.value}","password" : "${indexPassword.value}"}`
         }
-        console.log(requestSettings)
         fetch(loginEndPoint, requestSettings)
         .then(response => {
             console.log(response);
             return response.json();
         })
-        .then(data => {
-            console.log(data);
-            localStorage.setItem('jwt', data.jwt);
-            location.href = './mis-tareas.html';
+        .then((data) => {
+            if(data.jwt) {
+                localStorage.setItem('jwt', data.jwt);
+                location.href = './mis-tareas.html';
+            } else {
+                console.log('datos no validos');
+                spinner.removeSpinner();
+            }
         })
     }
 })
