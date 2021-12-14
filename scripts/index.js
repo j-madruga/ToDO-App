@@ -1,7 +1,7 @@
 window.addEventListener('load', () => {
-    // API URL
+    // ***** API URL
     const API_URL = 'https://ctd-todo-api.herokuapp.com/v1';
-    // Index nodes
+    // ***** Index nodes
     const indexForm = document.querySelector('form');
     const indexEmail = document.querySelector('#inputEmail');
     const indexPassword = document.querySelector('#inputPassword');
@@ -16,12 +16,12 @@ window.addEventListener('load', () => {
     /* -------------------------------------------------------------------------- */
     /*                                  FUNCIONES                                 */
     /* -------------------------------------------------------------------------- */
-    // funcion que previene el comportamiento por defecto del submit
+    // ***** Funcion que previene el comportamiento por defecto del submit
     function preventDefaultBehavior(event) {
         event.preventDefault();
     }
     
-    // funcion que ejecuta el login y guarda el JWT en localStorage
+    // ***** Funcion que ejecuta el login y guarda el JWT en localStorage
     function login() {
         const loginEndPoint = `${API_URL}/users/login`;
         const requestSettings = {

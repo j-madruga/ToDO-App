@@ -1,7 +1,7 @@
 window.addEventListener('load', () => {
-    // API URL
+    // ***** API URL
     const API_URL = 'https://ctd-todo-api.herokuapp.com/v1';
-    // Sign Up Nodes
+    // ***** Sign Up Nodes
     const signupForm = document.querySelector('form');
     const signUpName = document.querySelector('#name');
     const singUpLastName = document.querySelector('#lastName');
@@ -33,7 +33,6 @@ window.addEventListener('load', () => {
         const pwrdMsjError = document.createElement('p');
         pwrdMsjError.classList.add('pwrdMsjError');
         pwrdMsjError.innerHTML = 'las contraseñas no coinciden, intente nuevamente';
-        /* -------------------------------------------------------------------------- */
         if (signUpPassword.value != repeatPassword.value) {
             if (!signupForm.querySelector('.pwrdMsjError')) {
                 signupForm.appendChild(pwrdMsjError);
@@ -81,9 +80,7 @@ window.addEventListener('load', () => {
 
     // ***** Funcion que crea nuevo usuario
     function createNewUser() {
-        // endpoint
         const newUserUrl = `${API_URL}/users`;
-        // settings 
         const requestSettings = {
             method: 'POST',
             headers: {
