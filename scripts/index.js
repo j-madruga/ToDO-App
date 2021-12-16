@@ -32,18 +32,21 @@ window.addEventListener('load', () => {
             body:`{"email" : "${indexEmail.value}","password" : "${indexPassword.value}"}`
         }
         fetch(loginEndPoint, requestSettings)
-        .then(response => {
-            console.log(response);
-            return response.json();
-        })
+        .then((response) => response.json())
         .then((data) => {
             if(data.jwt) {
                 localStorage.setItem('jwt', data.jwt);
                 location.href = './mis-tareas.html';
             } else {
-                console.log('datos no validos');
                 spinner.removeSpinner();
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'datos no validos',
+                    text: 'Intente nuevamente',
+                    showConfirmButton: false,
+                    timer: 1000
+                  });
             }
-        })
+        });
     }
 })

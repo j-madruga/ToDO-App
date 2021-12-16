@@ -13,10 +13,12 @@ window.addEventListener('load', () => {
     /*                                  LISTENERS                                 */
     /* -------------------------------------------------------------------------- */
     signupForm.addEventListener('submit', preventDefaultBehavior);
+    signupForm.addEventListener('submit', validateData);
     signupForm.addEventListener('submit', checkPasswordRepeat);
     signupForm.addEventListener('submit', checkEmptyFields);
-    signupForm.addEventListener('submit', normalizeObject);
-    signupForm.addEventListener('submit', createNewUser);
+    // signupForm.addEventListener('submit', normalizeObject);
+    // signupForm.addEventListener('submit', createNewUser);
+
 
     /* -------------------------------------------------------------------------- */
     /*                                  FUNCIONES                                 */
@@ -29,7 +31,7 @@ window.addEventListener('load', () => {
 
     // ***** Funcion que revisa en el registro que las contraseñas coincidan entre si
     function checkPasswordRepeat() {
-        // creacion de mensaje de error 
+        let validated = false;
         const pwrdMsjError = document.createElement('p');
         pwrdMsjError.classList.add('pwrdMsjError');
         pwrdMsjError.innerHTML = 'las contraseñas no coinciden, intente nuevamente';
@@ -39,7 +41,11 @@ window.addEventListener('load', () => {
             }
         } else if ((signUpPassword.value === repeatPassword.value) && signupForm.querySelector('.pwrdMsjError')) {
             signupForm.querySelector('.pwrdMsjError').remove();
+            validated = true;
+        } else {
+            validated = true;
         }
+        return validated;
     }
 
     // ***** Funcion que revisa que no haya campos vacios
@@ -48,24 +54,22 @@ window.addEventListener('load', () => {
         const emptyFieldMsj = document.createElement('p');
         emptyFieldMsj.classList.add('emptyFieldMsj');
         emptyFieldMsj.innerHTML = 'uno o mas campos estan vacios';
-        if (signUpName.value === '' ||
-            singUpLastName.value === '' ||
-            signUpEmail.value === '' ||
-            signUpPassword.value === '' ||
-            repeatPassword.value === '') {
+        if ((signUpName.value === '' || singUpLastName.value === '' || signUpEmail.value === '' || signUpPassword.value === '' || repeatPassword.value === '') && !signupForm.querySelector('.emptyFieldMsj')) {
             emptyFields = true;
-            if (!signupForm.querySelector('.emptyFielMsj')) {
-                signupForm.appendChild(emptyFieldMsj);
-            }
+            signupForm.appendChild(emptyFieldMsj);
+        } else if ((signUpName.value === '' || singUpLastName.value === '' || signUpEmail.value === '' || signUpPassword.value === '' || repeatPassword.value === '') && signupForm.querySelector('.emptyFieldMsj')) {
+            emptyFields = true;
         } else {
-            const emptyFieldMsj = signupForm.querySelector('.emptyFieldMsj');
-            if (emptyFieldMsj) {
-                emptyFieldMsj.remove();
-            }
+            signupForm.querySelector('.emptyFieldMsj').remove()
         }
         return emptyFields;
     }
 
+    // ***** Funcion que valida la información del formulario
+    function validateData() {
+        if (checkPasswordRepeat && !checkEmptyFields)
+            createNewUser;
+    }
     // ***** Funcion que crea objeto y lo normaliza 
     function normalizeObject() {
         objetoNormalizado = {

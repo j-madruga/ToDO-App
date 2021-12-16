@@ -1,9 +1,8 @@
 // ***** Guardo el JWT del localStorage
 const JWT = localStorage.getItem('jwt');
 // ***** Si no existe (da null), redirijo a index.html;
-if (!JWT) {
+if (!JWT)
     location.replace('./index.html');
-}
 
 window.addEventListener('load', () => {
     // ***** API URL
@@ -132,11 +131,20 @@ window.addEventListener('load', () => {
 
     // ***** Funcion que hace el logout y borra el JWT del localStorage
     function logout() {
-        const confirmation = confirm('¿Seguro desea cerrar sesión?');
-        if (confirmation) {
-            localStorage.clear();
-            location.replace('./index.html');
-        }
+        Swal.fire({
+            title: '¿Desea cerrar sesion?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si',
+            cancelButtonText: 'No'
+          }).then((result) => {
+            if (result.isConfirmed) {
+          localStorage.clear();
+          location.replace('./index.html');
+            } // cierra el if
+        })
     }
 
     // ***** Funcion que cambia el estado de la tarea
@@ -178,10 +186,31 @@ window.addEventListener('load', () => {
                     "Content-type": "application/json"
                 }
             }
-            fetch(updateTaskEndpoint, requestSettings)
-                .then((response) => response.json())
-                .then(renderUserTasks())
-                .catch((err) => console.log(err))
+            Swal.fire({
+                title: '¿Desea borrar esta tarea?',
+                text: "No será posible revertir esta acción.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: '¡Si!',
+                cancelButtonText: 'Cancelar',
+                customClass : {
+                    confirmButton: '#00FF00'
+                }
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  Swal.fire(
+                    'Tarea eliminada!',
+                    'La tarea ha sido correctamente eliminada.',
+                    'success'
+                  );
+                  fetch(updateTaskEndpoint, requestSettings)
+                      .then((response) => response.json())
+                      .then(renderUserTasks())
+                      .catch((err) => console.log(err))
+                }
+              })
         }));
     }
 })
